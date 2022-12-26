@@ -1,0 +1,44 @@
+const path = require("path");
+const join = require("path").join;
+const htmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+module.exports = {
+  entry: "./src/index.js",
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "main.js",
+  },
+  resolve: {
+    extensions: [".js"],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+      {
+        test: /\.css|.styl$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
+      },
+    ],
+  },
+  plugins: [
+    new htmlWebpackPlugin({
+      inject: true,
+      template: "./public/index.html",
+      filename: "./index.html",
+    }),
+    new MiniCssExtractPlugin({
+      filename: "style.css",
+    }),
+  ],
+  devServer: {
+    allowedHosts: join(__dirname, "dist"),
+    port: 3000,
+  },
+};
